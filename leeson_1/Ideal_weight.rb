@@ -7,9 +7,9 @@
 print 'Введите имя: '
 name = gets.chomp
 print 'Введите рост: '
-weight = gets.chomp
+weight = gets.chomp.to_i
 
-ideal_weight = (weight.to_i - 110) * 1.15
+ideal_weight = (weight - 110) * 1.15
 
 if ideal_weight < 0
   puts "#{name}. Ваш вес уже оптимальный"
