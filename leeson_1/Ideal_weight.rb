@@ -14,5 +14,5 @@ ideal_weight = (weight.to_i - 110) * 1.15
 if ideal_weight < 0
   puts "#{name}. Ваш вес уже оптимальный"
 else
-  puts "#{name}. Ваш вес не идеален"
+  puts "#{name}. Ваш вес неидеален"
 end
