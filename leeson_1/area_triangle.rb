@@ -8,4 +8,5 @@ base = gets.chomp.to_f
 print 'Введите высоту: '
 weight = gets.chomp.to_f
 
+#преобразование числа к типу флоат
 puts "Площадь треугольника: #{1/2.0 * base * weight}"
