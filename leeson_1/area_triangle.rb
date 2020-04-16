@@ -8,4 +8,4 @@ base = gets.chomp.to_f
 print 'Введите высоту: '
 weight = gets.chomp.to_f
 
-puts "Площадь треугольника: #{1.to_f / 2 * base * weight}"
+puts "Площадь треугольника: #{1/2.0 * base * weight}"
