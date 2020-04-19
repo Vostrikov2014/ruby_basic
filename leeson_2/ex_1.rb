@@ -14,4 +14,4 @@ day_month = {january: 31,
              october: 31,
              november: 30,
              december: 31}
-day_month.each { |key, value| puts value if value == 30 }
+day_month.each { |month, days| puts days if days == 30 }
