@@ -61,16 +61,16 @@ end
 
 
 class Route
+
   # Выводит список всех станций по-порядку от начальной до конечной
   attr_reader :stations
 
-  # Установка начальной и конечной станцию, а также списка промежуточных станций.
-  # Начальная и конечная станции указываютсся при создании маршрута, а промежуточные могут добавляться между ними
-  def initialize(start_station, finish_station)
-    @stations = [start_station, finish_station]
+  # Установка начальной и конечной станции
+  def initialize(begin_station, end_station)
+    @stations = [begin_station, end_station]
   end
 
-  # Добавление промежуточной станции в список
+  # Добавление промежуточных станций
   def station=(station)
     @stations.insert(-2, station)
   end
@@ -86,18 +86,20 @@ class Train
   #Установка скорости - Может набирать скорость
   # Может возвращать текущую скорость
   # Может принимать маршрут следования (объект класса Route).
-  attr_accessor :speed, :route, :station_index
   # Может возвращать количество вагонов
-  attr_reader :wagon_count, :train_number, :type
+
+  attr_accessor :speed #, :station_index
+  attr_reader :wagon_count, :train_number, :type, :route
 
   # Устанавливается номер (произвольная строка) и тип (грузовой, пассажирский) и количество вагонов,
   # эти данные указываются при создании экземпляра класса
   def initialize(train_number, type, wagon_count)
     @train_number = train_number
     @type = type
-    @wagon_count = wagon_count.to_i
+    @wagon_count = wagon_count
     @speed = 0
-    @station_index = 0
+    @route = []
+    #@station_index = 0
   end
 
   # Останавливаем поезд
@@ -105,8 +107,8 @@ class Train
     @speed = 0
   end
 
-  # Прицепляет/отцепляет вагоны (по одному вагону за операцию, метод просто увеличивает или уменьшает количество
-  # вагонов). Прицепка/отцепка вагонов может осуществляться только если поезд не движется.
+  # Прицепляет/отцепляет вагоны (по одному вагону за операцию, метод просто увеличивает или уменьшает количество вагонов).
+  # Прицепка/отцепка вагонов может осуществляться только если поезд не движется.
   def add_wagon
     @wagon_count += 1 if @speed == 0
   end
@@ -114,6 +116,59 @@ class Train
     @wagon_count -= 1 if @speed == 0
   end
 
+
+  def route=(route)
+    # !!!При изменении маршрута "убираем поезд со всех станций".
+    if @route.any?
+      @route.each { |s| s.del_train(self) }
+    end
+
+    # Добавляем новый и помещаем на первую станцию.
+    @route = route
+    route.stations.first.train = self
+  end
+
+
+  ##########################################################################################
+  # #################  СПРАВЛЕНИЯ ПО ЗАМЕЧАНИЮ #############################################
+
+  def current_station
+    # Подразумевается что поезд находится только на одной станции,
+    # поэтому нужно следить за удалением "ушедших" поездов
+    self.route.stations.select { |station| station.trains.include?(self) }.first
+  end
+
+  def forward
+    # Тут идея такая, получил текущую станцию, отправил с нее поезд (удалил со станции).
+    # Получил из маршрута следующую станцию по индексу текущей + 1  или  соответственно -1
+    # и присвоил этой станции текущий поезд. Такая же логика в def station(type)
+    current_station = self.current_station
+    current_station.del_train(self)
+    self.route.stations[self.route.stations.index(current_station) + 1].train = self
+  end
+
+  def backward
+    current_station = self.current_station
+    current_station.del_train(self)
+    self.route.stations[self.route.stations.index(current_station) - 1].train = self
+  end
+
+  def station(type)
+    current_station = self.current_station
+    if type == "пpедыдущая"
+      self.route.stations[self.route.stations.index(current_station) - 1]
+    elsif type == "текущая"
+      current_station
+    elsif type == "следующая"
+      self.route.stations[self.route.stations.index(current_station) + 1]
+    end
+  end
+
+  ############################################################################################
+  # ##########################################################################################
+
+
+=begin
   # Перемещение между станциями, указанными в маршруте.
   # Перемещение возможно вперед и назад, но только на 1 станцию за раз.
   def forward_station
@@ -142,12 +197,44 @@ class Train
       self.route.stations[station_index + 1] if station_index < self.route.stations.size - 1
     end
   end
+=end
 
 end
 
 
 #БЛОК ОСНОВНОЙ ПРОГРАММЫ
 
+station1 = Station.new('Начальная')
+station2 = Station.new('Станция2')
+station3 = Station.new('Станция3')
+station4 = Station.new('Конечная')
+
+route_train22_49 = Route.new(station1, station4)
+route_train22_49.station = station2
+route_train22_49.station = station3
+
+train22_49 = Train.new('22-49', 'грузовой', 21)
+
+train22_49.route = route_train22_49
+
+puts train22_49.station("текущая").name
+puts ''
+
+train22_49.forward
+train22_49.forward
+#puts train22_49.station("пpедыдущая").name
+puts train22_49.station("текущая").name
+#puts train22_49.station("следующая").name
+puts ''
+
+
+train22_49.backward
+#puts train22_49.station("пpедыдущая").name
+puts train22_49.station("текущая").name
+#puts train22_49.station("следующая").name
+
+
+=begin
 # СТАНЦИЯ
 # Станция имеет название, которое указывается при ее создании
 first_station = Station.new('Начальная')
@@ -223,12 +310,12 @@ puts first_station.trains
 
 # Может перемещаться между станциями, указанными в маршруте. Перемещение возможно вперед и назад, но только на
 # 1 станцию за раз.
-train18_99.forward_station
-train18_99.backward_station
+train18_99.forward
+train18_99.backward
 
 #Возвращать предыдущую станцию, текущую, следующую, на основе маршрута
-puts train18_99.station_return('предыдущая')
-puts train18_99.station_return('текущая')
-puts train18_99.station_return('следующая')
-
+puts train18_99.station('предыдущая')
+puts train18_99.station('текущая')
+puts train18_99.station('следующая')
+=end
 
