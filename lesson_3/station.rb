@@ -149,7 +149,7 @@ class Train
 
   def backward
     self.current_station
-    @route.stations[@route.stations.index(current_station) - 1].train = self
+    @route.stations[@route.stations.index(@current_station) - 1].train = self
     @current_station.del_train(self)
   end
 
