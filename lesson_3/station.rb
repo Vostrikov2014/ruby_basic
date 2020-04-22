@@ -135,32 +135,34 @@ class Train
   def current_station
     # Подразумевается что поезд находится только на одной станции,
     # поэтому нужно следить за удалением "ушедших" поездов
-    self.route.stations.select { |station| station.trains.include?(self) }.first
+    @current_station = @route.stations.select { |station| station.trains.include?(self) }.first
   end
 
   def forward
     # Тут идея такая, получил текущую станцию, отправил с нее поезд (удалил со станции).
     # Получил из маршрута следующую станцию по индексу текущей + 1  или  соответственно -1
     # и присвоил этой станции текущий поезд. Такая же логика в def station(type)
-    current_station = self.current_station
-    current_station.del_train(self)
-    self.route.stations[self.route.stations.index(current_station) + 1].train = self
+    self.current_station
+    @route.stations[@route.stations.index(@current_station) + 1].train = self
+    @current_station.del_train(self)
   end
 
   def backward
-    current_station = self.current_station
-    current_station.del_train(self)
-    self.route.stations[self.route.stations.index(current_station) - 1].train = self
+    self.current_station
+    @route.stations[@route.stations.index(current_station) - 1].train = self
+    @current_station.del_train(self)
   end
 
   def station(type)
-    current_station = self.current_station
+    self.current_station
+    i = @route.stations.index(@current_station)
+
     if type == "пpедыдущая"
-      self.route.stations[self.route.stations.index(current_station) - 1]
+      @route.stations[i - 1]
     elsif type == "текущая"
-      current_station
+      @current_station
     elsif type == "следующая"
-      self.route.stations[self.route.stations.index(current_station) + 1]
+      @route.stations[i + 1]
     end
   end
 
