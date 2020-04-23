@@ -132,29 +132,29 @@ class Train
   ##########################################################################################
   # #################  СПРАВЛЕНИЯ ПО ЗАМЕЧАНИЮ #############################################
 
-  def current_station
+  def set_current_station
     # Подразумевается что поезд находится только на одной станции,
     # поэтому нужно следить за удалением "ушедших" поездов
-    @current_station = @route.stations.select { |station| station.trains.include?(self) }.first
+    @current_station = @route.stations.find { |station| station.trains.include?(self) }
   end
 
   def forward
     # Тут идея такая, получил текущую станцию, отправил с нее поезд (удалил со станции).
     # Получил из маршрута следующую станцию по индексу текущей + 1  или  соответственно -1
     # и присвоил этой станции текущий поезд. Такая же логика в def station(type)
-    self.current_station
+    self.set_current_station
     @route.stations[@route.stations.index(@current_station) + 1].train = self
     @current_station.del_train(self)
   end
 
   def backward
-    self.current_station
+    self.set_current_station
     @route.stations[@route.stations.index(@current_station) - 1].train = self
     @current_station.del_train(self)
   end
 
   def station(type)
-    self.current_station
+    self.set_current_station
     i = @route.stations.index(@current_station)
 
     if type == "пpедыдущая"
