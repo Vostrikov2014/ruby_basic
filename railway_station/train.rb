@@ -51,17 +51,17 @@ class Train
     elsif type == "следующая"
       @route.stations[i + 1]
     end
+  end
 
+  protected
 
-    protected
-
-    def remove_train_from_station
-      if @route.any?
-        @route.each { |s| s.del_train(self) }
-      end
-    end
-
-    def set_current_station
-      @current_station = @route.stations.find { |station| station.trains.include?(self) }
+  def remove_train_from_station
+    if @route.any?
+      @route.each { |s| s.del_train(self) }
     end
   end
+
+  def set_current_station
+    @current_station = @route.stations.find { |station| station.trains.include?(self) }
+  end
+end
