@@ -1,4 +1,6 @@
 class PassengerTrain < Train
+  attr_reader :TRAIN_TYPE, :wagons
+
   def initialize(train_number)
     super
     @TRAIN_TYPE = 'passenger'

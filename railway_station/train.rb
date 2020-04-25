@@ -21,18 +21,18 @@ class Train
     self.remove_train_from_station
 
     @route = route
-    route.stations.first.train = self
+    route.stations.first.trains << self
   end
 
   def move_next_station
     self.set_current_station
-    @route.stations[@route.stations.index(@current_station) + 1].train = self
+    @route.stations[@route.stations.index(@current_station) + 1].trains << self
     @current_station.del_train(self)
   end
 
   def move_previous_station
     self.set_current_station
-    @route.stations[@route.stations.index(@current_station) - 1].train = self
+    @route.stations[@route.stations.index(@current_station) - 1].trains << self
     @current_station.del_train(self)
   end
 
@@ -41,11 +41,11 @@ class Train
     i = @route.stations.index(@current_station)
 
     if type == "пpедыдущая"
-      @route.stations[i - 1]
+      puts "Предыдущая станция: #{@route.stations[i - 1].name}"
     elsif type == "текущая"
-      @current_station
+      puts "Текущая станция: #{@current_station.name}"
     elsif type == "следующая"
-      @route.stations[i + 1]
+      puts "Следующая станция : #{@route.stations[i + 1].name}"
     end
   end
 
