@@ -17,6 +17,7 @@ class Route
     self.set_route_name
   end
 
+  # Вспомогательный метод. не имеет смысла вызывать из других объектов
   protected
 
   def set_route_name
