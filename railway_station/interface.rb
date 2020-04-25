@@ -127,6 +127,7 @@ class Interface
     puts ' 0 - ОТМЕНА'
   end
 
+
   # CREATE STATION ###
   #
   def create_station
