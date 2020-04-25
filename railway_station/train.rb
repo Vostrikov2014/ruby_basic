@@ -1,24 +1,20 @@
 class Train
   attr_accessor :speed
-  attr_reader :wagon_count, :train_number, :type, :route
+  attr_reader :train_number, :route
 
-  def initialize(train_number, type, wagon_count)
+  def initialize(train_number)
     @train_number = train_number
-    @type = type
-    @wagon_count = wagon_count
-    @speed = 0
+    @wagons = []
     @route = []
+    @speed = 0
   end
 
   def stop
     @speed = 0
   end
 
-  def attach_wagon
-    @wagon_count += 1 if @speed == 0
-  end
-  def detach_wagon
-    @wagon_count -= 1 if @speed == 0
+  def detach_wagon(wagon)
+    @wagons.delete(wagon)
   end
 
   def set_route(route)
@@ -54,7 +50,8 @@ class Train
   end
 
   protected
-
+# методы используются только внутри класса
+# пока нет необходимости вызывать извне
   def remove_train_from_station
     if @route.any?
       @route.each { |s| s.del_train(self) }
