@@ -74,7 +74,7 @@ class Interface
       puts ' 9 - просмотр списка станций и поездов на станциях'
       puts ' 10 - просмотр вагонов поезда'
       puts ' 0 - ВЫХОД'
-      puts ''
+      puts ' '
 
       entered_number = gets.chomp.to_i
 
