@@ -18,9 +18,17 @@ class Interface
     @station << Station.new('Moscow')
     @station << Station.new('Smolensk')
     @station << Station.new('Gagarin')
+    @station << Station.new('Kursk')
+    @station << Station.new('Krasnodar')
+    @station << Station.new('Voroneg')
+    @station << Station.new('Rayzan')
 
     route = Route.new(@station[0], @station[1])
     @route << route
+    route_1 = Route.new(@station[3], @station[6])
+    route_1.add_station(@station[4])
+    route_1.add_station(@station[5])
+    @route << route_1
 
     train_p = PassengerTrain.new('340')
     @train << train_p
@@ -53,7 +61,7 @@ class Interface
 
   def run
     loop do
-      puts ''
+      puts ' '
       puts 'Введите число для выбора операции:'
       puts ' 1 - создать станцию'
       puts ' 2 - создать или редактировать маршрут'
@@ -152,9 +160,9 @@ class Interface
   end
 
   def create_new_route
-    puts_selection_menu(@station, 'Введите число - начало пути')
+    puts_menu(@station, 'Введите число - начало пути')
     entered_number = gets.chomp.to_i - 1
-    puts_selection_menu(@station, 'Введите число - окончание пути')
+    puts_menu(@station, 'Введите число - окончание пути')
     entered_number1 = gets.chomp.to_i - 1
 
     @route << Route.new(@station[entered_number], @station[entered_number1])
@@ -181,7 +189,7 @@ class Interface
 
   def add_station_in_route
     puts_menu(@route, 'Введите число - редактируемый маршрут')
-    ruote = @route[gets.chomp.to_i - 1]
+    route = @route[gets.chomp.to_i - 1]
 
     puts_menu(@station, 'Введите число - добавить станцию')
     station = @station[gets.chomp.to_i - 1]
@@ -191,7 +199,7 @@ class Interface
 
   def del_station_from_route
     puts_menu(@route, 'Введите число - редактируемый маршрут')
-    ruote = @route[gets.chomp.to_i - 1]
+    route = @route[gets.chomp.to_i - 1]
 
     puts_menu(@station, 'Введите число - удалить станцию')
     station = @station[gets.chomp.to_i - 1]
@@ -285,8 +293,8 @@ class Interface
   def train_move
     puts_menu(@train, 'Введите число - поезд который необходимо переместить по маршрут' )
     train = @train[gets.chomp.to_i - 1]
-    puts_menu(@route, 'Введите число - маршрут по которому перемещать поезд')
-    route = @route[gets.chomp.to_i - 1]
+    #puts_menu(@route, 'Введите число - маршрут по которому перемещать поезд')
+    #route = @route[gets.chomp.to_i - 1]
 
     puts 'Введите число - переместить:'
     puts ' 1 - ВПЕРЕД на одну станцию'
@@ -343,5 +351,6 @@ class Interface
 
     print "ПОЕЗД № #{train.train_number}; "
     print "Вагоны: #{train.wagons}"
+    puts ' '
   end
 end
