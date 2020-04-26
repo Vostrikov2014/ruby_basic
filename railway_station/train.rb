@@ -52,6 +52,10 @@ class Train
   protected
 # методы используются только внутри класса
 # пока нет необходимости вызывать извне
+  def attach_wagon(wagon)
+    @wagons << wagon if @speed.zero? && @train_type == wagon.wagon_type
+  end
+
   def remove_train_from_station
     if @route.any?
       @route.each { |s| s.del_train(self) }

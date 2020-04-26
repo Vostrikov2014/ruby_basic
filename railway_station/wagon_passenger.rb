@@ -1,8 +1,8 @@
 class WagonPassenger < Wagon
-  attr_reader :WAGON_TYPE
+  attr_reader :wagon_type
 
   def initialize
     super
-    @WAGON_TYPE = 'passenger'
+    @wagon_type = 'passenger'
   end
 end

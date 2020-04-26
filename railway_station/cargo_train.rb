@@ -1,13 +1,9 @@
 class CargoTrain < Train
-  attr_reader :TRAIN_TYPE, :wagons
+  attr_reader :train_type, :wagons
 
   def initialize(train_number)
     super
-    @TRAIN_TYPE = 'cargo'
-  end
-
-  def attach_wagon(wagon)
-    @wagons << wagon if @speed.zero? && @TRAIN_TYPE == wagon.WAGON_TYPE
+    @train_type = 'cargo'
   end
 
 end
