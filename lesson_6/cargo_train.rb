@@ -6,8 +6,4 @@ class CargoTrain < Train
     @train_type = 'cargo'
   end
 
-  def qqq
-
-  end
-
 end
