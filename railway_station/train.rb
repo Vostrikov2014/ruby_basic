@@ -65,4 +65,9 @@ class Train
   def set_current_station
     @current_station = @route.stations.find { |station| station.trains.include?(self) }
   end
+
+  def qqq
+
+  end
+
 end
