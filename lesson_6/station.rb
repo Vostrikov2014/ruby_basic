@@ -1,9 +1,21 @@
+%w[instance_counter].each { |f| require_relative f }
+
 class Station
+  include InstanceCounter
+
   attr_reader :name, :trains
+
+  @@instances = 0
+
+  def self.all
+    @@instances
+  end
 
   def initialize(name)
     @name = name
     @trains = []
+    @@instances += 1
+    register_instance
   end
 
   def add_train(train)

@@ -1,10 +1,15 @@
+%w[instance_counter].each { |f| require_relative f }
+
 class Route
+  include InstanceCounter
+
   attr_reader :stations, :name
 
   def initialize(begin_station, end_station)
     @stations = [begin_station, end_station]
     @name = ''
     self.set_route_name
+    register_instance
   end
 
   def add_station(station)

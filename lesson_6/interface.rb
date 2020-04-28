@@ -1,4 +1,4 @@
-%w[station route train passenger_train cargo_train wagon wagon_passenger wagon_cargo].each { |f| require_relative f }
+%w[station route train passenger_train cargo_train wagon wagon_passenger wagon_cargo manufacturer].each { |f| require_relative f }
 
 class Interface
 
@@ -56,6 +56,8 @@ class Interface
     train_c.attach_wagon(@wagon_passenger[0])
     train_c.attach_wagon(@wagon_passenger[1])
 
+    puts Train.find('340')
+    puts train_p.train_number
   end
 
 
