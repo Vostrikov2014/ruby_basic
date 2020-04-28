@@ -4,8 +4,6 @@ module InstanceCounter
     base.send :include, InstancesMethods
   end
 
-  @@instances = 0
-
   module ClassMethods
     attr_reader :instances
     def register_instance
