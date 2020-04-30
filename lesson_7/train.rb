@@ -94,7 +94,4 @@ class Train
     raise "Номер не соответствует формату" if @train_number !~ NUMBER_FORMAT
   end
 
-  def q
-  end
-
 end
