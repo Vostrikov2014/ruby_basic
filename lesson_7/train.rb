@@ -90,7 +90,7 @@ class Train
   end
 
   def validate!
-    raise "Не введен номер" if @train_number.nil?
+    raise "Введите номер" if @train_number.nil?
     raise "Номер не соответствует формату" if @train_number !~ NUMBER_FORMAT
   end
 
