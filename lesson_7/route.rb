@@ -7,10 +7,10 @@ class Route
 
   def initialize(begin_station, end_station)
     @stations = [begin_station, end_station]
-    validate!
     @name = ''
     self.set_route_name
     register_instance
+    validate!
   end
 
   def add_station(station)

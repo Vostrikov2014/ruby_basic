@@ -13,12 +13,12 @@ class Train
 
   def initialize(train_number)
     @train_number = train_number
-    validate!
     @wagons = []
     @route = []
     @speed = 0
     @@trains[train_number] = self
     register_instance
+    validate!
   end
 
   def self.find(number)
