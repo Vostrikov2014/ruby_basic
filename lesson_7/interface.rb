@@ -46,9 +46,9 @@ class Interface
     train_c.set_route(route)
 
     wagon_p_1 = WagonPassenger.new(1,53)
-    wagon_p_2 = WagonPassenger.new(1,53)
+    wagon_p_2 = WagonPassenger.new(2,53)
     wagon_c_1 = WagonCargo.new(1,3456)
-    wagon_c_2 = WagonCargo.new(1,3456)
+    wagon_c_2 = WagonCargo.new(2,3456)
     @wagon_passenger << wagon_p_1
     @wagon_cargo << wagon_c_1
     @wagon_passenger << wagon_p_2
@@ -56,11 +56,9 @@ class Interface
 
     train_p.attach_wagon(@wagon_passenger[0])
     train_p.attach_wagon(@wagon_passenger[1])
-    train_c.attach_wagon(@wagon_passenger[0])
-    train_c.attach_wagon(@wagon_passenger[1])
+    train_c.attach_wagon(@wagon_cargo[0])
+    train_c.attach_wagon(@wagon_cargo[1])
 
-    puts Train.find('340-23')
-    puts train_p.train_number
   end
 
 
@@ -411,24 +409,35 @@ class Interface
     puts_menu(@train, 'Введите число - поезд в вагоны которого хотите посадить пассажиров / добавить груз')
     train = @train[gets.chomp.to_i - 1]
 
-    raise 'У этого поезда нет вагонов' unless @trains.wagons.any?
+    unless train.wagons.any?
+      puts 'У этого поезда нет вагонов'
+    else
+      if train.train_type == 'passenger'
+        puts_menu(@wagon_passenger, 'Введите номер вагона')
+        n = gets.chomp.to_i
 
-    if train.train_type == 'passenger'
-      puts_menu(@wagon_passenger, 'Введите число - поезд в вагоны которого хотите посадить пассажиров / добавить груз')
-      wagon = @wagon_passenger[gets.chomp.to_i - 1]
+        if n == 0
+          puts 'Ввод отменен!'
+        else
+          wagon = @wagon_passenger[n - 1]
+          wagon.take_place
+          puts 'Пассажир сел в вагон'
+        end
 
-      puts 'Введите количество пассажиров'
-      user_count = gets.chomp.to_i
-      wagon.take_place(user_count)
+      elsif train.train_type == 'cargo'
 
-    elsif train.train_type == 'cargo'
+        puts_menu(@wagon_cargo, 'Введите номер вагона')
+        n = gets.chomp.to_i
 
-      puts_menu(@wagon_cargo, 'Введите число - поезд в вагоны которого хотите посадить пассажиров / добавить груз')
-      wagon = @wagon_cargo[gets.chomp.to_i - 1]
-
-      puts 'Введите обем груза'
-      cargo_volume = gets.chomp.to_i
-      wagon.take_volume(cargo_volume)
+        if n == 0
+          puts 'Ввод отменен!'
+        else
+          wagon = @wagon_cargo[n - 1]
+          puts 'Введите обем груза'
+          cargo_volume = gets.chomp.to_i
+          wagon.take_volume(cargo_volume)
+        end
+      end
     end
   end
 
