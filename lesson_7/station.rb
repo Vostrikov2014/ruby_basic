@@ -19,6 +19,10 @@ class Station
     validate!
   end
 
+  def block
+    @trains.each { |t| yield(t) }
+  end
+
   def add_train(train)
     @trains << train
   end
@@ -28,6 +32,7 @@ class Station
   end
 
   def train_at_station(type)
+    raise 'Поездов нет' unless @trains.any?
     @trains.select { |t| t.type == type }
   end
 

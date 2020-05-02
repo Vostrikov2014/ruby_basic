@@ -5,7 +5,7 @@ class Train
   include InstanceCounter
 
   attr_accessor :speed
-  attr_reader :train_number, :route
+  attr_reader :train_number, :route, :wagons
 
   @@trains = {}
 
@@ -19,6 +19,10 @@ class Train
     @@trains[train_number] = self
     register_instance
     validate!
+  end
+
+  def block
+    @wagons.each { |w| yield(w) }
   end
 
   def self.find(number)

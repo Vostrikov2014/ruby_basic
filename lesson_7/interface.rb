@@ -15,6 +15,8 @@ class Interface
   # seed ###
   #
   def seed
+
+    # Тестовые данные
     @station << Station.new('Moscow')
     @station << Station.new('Smolensk')
     @station << Station.new('Gagarin')
@@ -30,23 +32,23 @@ class Interface
     route_1.add_station(@station[5])
     @route << route_1
 
-=begin
-    train_p = PassengerTrain.new('340')
+
+    train_p = PassengerTrain.new('340-23')
     @train << train_p
     @passenger_train << train_p
 
     train_p.set_route(route)
 
-    train_c = CargoTrain.new('122/57/18')
+    train_c = CargoTrain.new('122-45')
     @train << train_c
     @cargo_train << train_c
 
     train_c.set_route(route)
 
-    wagon_p_1 = WagonPassenger.new
-    wagon_p_2 = WagonPassenger.new
-    wagon_c_1 = WagonCargo.new
-    wagon_c_2 = WagonCargo.new
+    wagon_p_1 = WagonPassenger.new(1,53)
+    wagon_p_2 = WagonPassenger.new(1,53)
+    wagon_c_1 = WagonCargo.new(1,3456)
+    wagon_c_2 = WagonCargo.new(1,3456)
     @wagon_passenger << wagon_p_1
     @wagon_cargo << wagon_c_1
     @wagon_passenger << wagon_p_2
@@ -57,9 +59,8 @@ class Interface
     train_c.attach_wagon(@wagon_passenger[0])
     train_c.attach_wagon(@wagon_passenger[1])
 
-    puts Train.find('340')
+    puts Train.find('340-23')
     puts train_p.train_number
-=end
   end
 
 
@@ -77,6 +78,7 @@ class Interface
       puts ' 8 - просмотр местоположения поезда'
       puts ' 9 - просмотр списка станций и поездов на станциях'
       puts ' 10 - просмотр вагонов поезда'
+      puts ' 11 - посадить пассажира / загрузить вагон'
       puts ' 0 - ВЫХОД'
       puts ' '
 
@@ -102,7 +104,9 @@ class Interface
       when 9
         list_train
       when 10
-        list_wagon
+        puts_wagon
+      when 11
+        load_wagon
       when 0
         puts 'Вы закончили работу с программой'
         break
@@ -121,9 +125,9 @@ class Interface
 
     list_menu.each_with_index do |value, index|
       if value.class == Train || value.class == PassengerTrain || value.class == CargoTrain
-        puts " #{index+1} - #{value.TRAIN_TYPE} №#{value.train_number}"
+        puts " #{index+1} - #{value.train_type} №#{value.train_number}"
       elsif value.class == Wagon || value.class == WagonPassenger || value.class == WagonCargo
-        puts " #{index+1} - #{value}"
+        puts " #{index+1} - #{value.number}"
       elsif
         puts " #{index+1} - #{value.name}"
       end
@@ -286,12 +290,20 @@ class Interface
   def attach_wagon
     puts_menu(@train, 'Введите число - поезд которому добавляется вагон' )
     train = @train[gets.chomp.to_i - 1]
-    if train.TRAIN_TYPE == 'passenger'
-      wagon = WagonPassenger.new
+
+    if train.train_type == 'passenger'
+
+      puts 'Введите число - количество мест в вагоне'
+      all_place = gets.chomp.to_i
+      wagon = WagonPassenger.new(all_place)
       @wagon_passenger << wagon
       train.attach_wagon(wagon)
-    elsif train.TRAIN_TYPE == 'cargo'
-      wagon = WagonCargo.new
+
+    elsif train.train_type == 'cargo'
+
+      puts 'Введите число - объем вагона'
+      all_volume = gets.chomp.to_i
+      wagon = WagonCargo.new(all_volume)
       @wagon_cargo << wagon
       train.attach_wagon(wagon)
     end
@@ -301,11 +313,11 @@ class Interface
     puts_menu(@train, 'Введите число - поезд у которого удаляется вагон' )
     train = @train[gets.chomp.to_i - 1]
 
-    if train.TRAIN_TYPE == 'passenger'
+    if train.train_type == 'passenger'
       puts_menu(@wagon_passenger, 'Введите число - вагон который хотите удалить' )
       wagon = @wagon_passenger[gets.chomp.to_i - 1]
       train.detach_wagon(wagon)
-    elsif train.TRAIN_TYPE == 'cargo'
+    elsif train.train_type == 'cargo'
       puts_menu(@wagon_cargo, 'Введите число - вагон который хотите удалить' )
       wagon = @wagon_cargo[gets.chomp.to_i - 1]
       train.detach_wagon(wagon)
@@ -356,23 +368,68 @@ class Interface
     end
   end
 
+
+
+
+  ######################################################################################
+  # Урок 8
+
   def list_train
     @station.each do |station|
       puts ''
       puts "СТАНЦИЯ  #{station.name}"
-
-      print "Поезда: "
-      station.trains.each { |train| print "#{train.TRAIN_TYPE} №#{train.train_number}; "} if station.trains.any?
-      puts ''
+      station.block do |t|
+        puts "Поезд: #{t.train_number}, #{t.train_type}, #{t.wagons.size}" if station.trains.any?
+        puts 'Вагоны: '
+        list_wagon(t)
+      end
     end
   end
 
-  def list_wagon
+  def puts_wagon
     puts_menu(@train, 'Введите число - поезд вагоны которого просмотреть' )
     train = @train[gets.chomp.to_i - 1]
 
     print "ПОЕЗД № #{train.train_number}; "
-    print "Вагоны: #{train.wagons}"
-    puts ' '
+    puts 'Вагоны: '
+    list_wagon(train)
   end
+
+  def list_wagon(train)
+    if train.train_type == 'passenger'
+      train.block do |w|
+        puts "#{w.wagon_type}, #{w.free_place}, #{w.busy_place}"
+      end
+    elsif train.train_type == 'cargo'
+      train.block do |w|
+        puts "#{w.wagon_type}, #{w.free_volume}, #{w.busy_volume}"
+      end
+    end
+  end
+
+  def load_wagon
+    puts_menu(@train, 'Введите число - поезд в вагоны которого хотите посадить пассажиров / добавить груз')
+    train = @train[gets.chomp.to_i - 1]
+
+    raise 'У этого поезда нет вагонов' unless @trains.wagons.any?
+
+    if train.train_type == 'passenger'
+      puts_menu(@wagon_passenger, 'Введите число - поезд в вагоны которого хотите посадить пассажиров / добавить груз')
+      wagon = @wagon_passenger[gets.chomp.to_i - 1]
+
+      puts 'Введите количество пассажиров'
+      user_count = gets.chomp.to_i
+      wagon.take_place(user_count)
+
+    elsif train.train_type == 'cargo'
+
+      puts_menu(@wagon_cargo, 'Введите число - поезд в вагоны которого хотите посадить пассажиров / добавить груз')
+      wagon = @wagon_cargo[gets.chomp.to_i - 1]
+
+      puts 'Введите обем груза'
+      cargo_volume = gets.chomp.to_i
+      wagon.take_volume(cargo_volume)
+    end
+  end
+
 end
