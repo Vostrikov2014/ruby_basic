@@ -14,13 +14,13 @@ class Station
   def initialize(name)
     @name = name
     @trains = []
+    validate!
     @@instances << self
     register_instance
-    validate!
   end
 
-  def block
-    @trains.each { |t| yield(t) }
+  def each_train
+    @trains.each { |train| yield train }
   end
 
   def add_train(train)

@@ -376,10 +376,10 @@ class Interface
     @station.each do |station|
       puts ''
       puts "СТАНЦИЯ  #{station.name}"
-      station.block do |t|
-        puts "Поезд: #{t.train_number}, #{t.train_type}, #{t.wagons.size}" if station.trains.any?
+      station.each_train do |train|
+        puts "Поезд: #{train.train_number}, #{train.train_type}, #{train.wagons.size}" if station.trains.any?
         puts 'Вагоны: '
-        list_wagon(t)
+        list_wagon(train)
       end
     end
   end
@@ -395,12 +395,12 @@ class Interface
 
   def list_wagon(train)
     if train.train_type == 'passenger'
-      train.block do |w|
-        puts "#{w.wagon_type}, #{w.free_place}, #{w.busy_place}"
+      train.each_wagon do |wagon|
+        puts "#{wagon.wagon_type}, #{wagon.free_place}, #{wagon.busy_place}"
       end
     elsif train.train_type == 'cargo'
-      train.block do |w|
-        puts "#{w.wagon_type}, #{w.free_volume}, #{w.busy_volume}"
+      train.each_wagon do |wagon|
+        puts "#{wagon.wagon_type}, #{wagon.free_volume}, #{wagon.busy_volume}"
       end
     end
   end

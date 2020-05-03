@@ -16,13 +16,13 @@ class Train
     @wagons = []
     @route = []
     @speed = 0
+    validate!
     @@trains[train_number] = self
     register_instance
-    validate!
   end
 
-  def block
-    @wagons.each { |w| yield(w) }
+  def each_wagon
+    @wagons.each { |wagon| yield wagon }
   end
 
   def self.find(number)
@@ -85,7 +85,7 @@ class Train
 # пока нет необходимости вызывать извне
   def remove_train_from_station
     if @route.any?
-      @route.each { |s| s.del_train(self) }
+      @route.each { |station| station.del_train(self) }
     end
   end
 
