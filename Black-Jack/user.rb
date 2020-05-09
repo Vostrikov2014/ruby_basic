@@ -1,6 +1,6 @@
 class User
   attr_accessor :cards, :score
-  attr_reader :name, :bank
+  attr_reader :name
 
   def initialize(name)
     @name = name
