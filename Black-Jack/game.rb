@@ -17,15 +17,21 @@ class Game
       new_game
       user_make_game
       dealer_make_game
+
+      puts 'Введите: 1 - продолжить, 2 - выход'
+      entered_number = gets.chomp.to_i
+      next if entered_number == 1
+      break  if entered_number == 2
     end
   end
 
   def new_game
+    @card_index = 0
     @card_deck = CardDeck.new
     @card_deck_shuffled = @card_deck.shuffled_card
 
     @round_bank = 0
-    @card_index = 0
+    @round_bank += REGULAR_BANK * 2
 
     @user.cards = []
     @user.score = 0
@@ -37,8 +43,6 @@ class Game
     @dealer.score = 0
     (1..2).each { |n| add_card(@dealer)}
     @dealer.put_bank(REGULAR_BANK)
-
-    @round_bank += REGULAR_BANK * 2
   end
 
   def user_make_game
