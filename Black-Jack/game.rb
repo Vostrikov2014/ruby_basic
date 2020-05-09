@@ -1,23 +1,25 @@
 %w[user card_deck].each { |f| require_relative f }
 
 class Game
-  attr_reader :user, :dealer, :card_index, :round_bank
+  #attr_reader :user, :dealer, :card_index, :round_bank
 
   REGULAR_BANK = 10
 
   def initialize(name)
     @user = User.new(name)
-    @dealer = Dealer.new('Dealer')
+    @dealer = User.new('Dealer')
     @card_index = 0
     @bank_game = 0
   end
 
   def start_game
     loop do
+      @stop = false
       new_game
       user_make_game
-      dealer_make_game
-
+      dealer_make_game if @stop == false
+      result_game
+      open_cards
       puts 'Введите: 1 - продолжить, 2 - выход'
       entered_number = gets.chomp.to_i
       next if entered_number == 1
@@ -37,7 +39,6 @@ class Game
     @user.score = 0
     (1..2).each { |n| add_card(@user)}
     @user.put_bank(REGULAR_BANK)
-    puts @user.cards
 
     @dealer.cards = []
     @dealer.score = 0
@@ -52,8 +53,9 @@ class Game
     entered_number = gets.chomp.to_i
 
     return if entered_number == 1
+
     add_card(@user) if entered_number == 2
-    open_cards if entered_number == 3
+    @stop = true if entered_number == 3
   end
 
   def dealer_make_game
@@ -61,9 +63,17 @@ class Game
   end
 
   def add_card(user)
-    user.cards << @card_deck_shuffled[@card_index]
-    user.score += @card_deck.card_value(@card_deck_shuffled[@card_index])
+    card = @card_deck_shuffled[@card_index]
+    user.cards << card
+    user.score += @card_deck.card_value(card)
     @card_index += 1
+  end
+
+  def result_game
+    puts "Ваши карты: #{@user.cards}"
+    puts "Ваши очки: #{@user.score}"
+    puts "Карты дилера: #{@dealer.cards}"
+    puts "Очки дилера: #{@dealer.score}"
   end
 
   def open_cards
