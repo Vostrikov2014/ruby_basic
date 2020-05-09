@@ -1,22 +1,19 @@
-class User < Users
+class User
+  attr_accessor :cards, :score
+  attr_reader :name, :bank
 
   def initialize(name)
-    super
+    @name = name
+    @bank = 100
+    @cards = []
+    @score = 0
   end
 
-  def set_cards
-    super
-    puts @cards
+  def put_bank(value)
+    @bank -= value
   end
 
-  def make_game
-    puts "Карты: #{@cards}"
-    puts "Очки: #{@score}"
-    puts ' Введите: 1 - пропустить ход, 2 - добавить карту, 3 - открыть карты'
-    entered_number = gets.chomp.to_i
-
-    return if entered_number == 1
-    add_card if entered_number == 2
-    open_cards if entered_number == 3
+  def get_win(value)
+    @bank += value
   end
 end
