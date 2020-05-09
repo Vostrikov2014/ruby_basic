@@ -15,7 +15,12 @@ class Game
     name = gets.chomp
     @user = User.new(name)
     @dealer = Dealer.new('Dealer')
-    new_game
+
+    loop do
+      new_game
+      @user.make_game
+      @dealer.make_game
+    end
   end
 
   def new_game
@@ -27,6 +32,7 @@ class Game
     @card_index = 0
 
     @user.set_cards
+    @user.total_score
     @user.put_bank(REGULAR_BANK)
     @dealer.set_cards
     @dealer.put_bank(REGULAR_BANK)
