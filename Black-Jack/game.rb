@@ -1,7 +1,6 @@
 %w[user card_deck].each { |f| require_relative f }
 
 class Game
-  #attr_reader :user, :dealer, :card_index, :round_bank
 
   REGULAR_BANK = 10
 
@@ -17,14 +16,14 @@ class Game
       @stop = false
       new_game
       user_make_game
-      dealer_make_game if @stop == false
+      dealer_make_game unless @stop
       result_game
       open_cards
       puts ''
       puts 'Введите: 1 - продолжить, 2 - выход'
       entered_number = gets.chomp.to_i
       next if entered_number == 1
-      break  if entered_number == 2
+      break if entered_number == 2
     end
   end
 
