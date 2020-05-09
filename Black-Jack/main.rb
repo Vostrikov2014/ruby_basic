@@ -5,6 +5,4 @@ puts 'Обозначение масти: + - крести, <3 - черви, ^ - 
 
 print 'Введите имя игрока: '
 name = gets.chomp
-
-game = Game.new(name)
-game.start_game
+Game.new(name).start_game
