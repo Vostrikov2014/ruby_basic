@@ -20,6 +20,7 @@ class Game
       dealer_make_game if @stop == false
       result_game
       open_cards
+      puts ''
       puts 'Введите: 1 - продолжить, 2 - выход'
       entered_number = gets.chomp.to_i
       next if entered_number == 1
@@ -37,7 +38,7 @@ class Game
 
     @user.cards = []
     @user.score = 0
-    (1..2).each { |n| add_card(@user)}
+    (1..2).each { |n| add_card(@user) }
     @user.put_bank(REGULAR_BANK)
 
     @dealer.cards = []
@@ -47,9 +48,11 @@ class Game
   end
 
   def user_make_game
+    puts ''
     puts "Карты: #{@user.cards}"
     puts "Очки: #{@user.score}"
-    puts ' Введите: 1 - пропустить ход, 2 - добавить карту, 3 - открыть карты'
+    puts ''
+    puts 'Введите: 1 - пропустить ход, 2 - добавить карту, 3 - открыть карты'
     entered_number = gets.chomp.to_i
 
     return if entered_number == 1
@@ -70,6 +73,7 @@ class Game
   end
 
   def result_game
+    puts ''
     puts "Ваши карты: #{@user.cards}"
     puts "Ваши очки: #{@user.score}"
     puts "Карты дилера: #{@dealer.cards}"
@@ -77,15 +81,18 @@ class Game
   end
 
   def open_cards
-    if @user.score > @dealer.score && @user.score <= 21 || @dealer.score > 21 && user.score <= 21
+    if @user.score > @dealer.score && @user.score <= 21 || @dealer.score > 21 && @user.score <= 21
       @user.get_win(@bank_game)
+      puts ''
       puts "Победил #{@user.name}!"
-    elsif @dealer.score > @user.score && @dealer.score <= 21 || @dealer.score <= 21 && user.score > 21
+    elsif @dealer.score > @user.score && @dealer.score <= 21 || @dealer.score <= 21 && @user.score > 21
       @dealer.get_win(@bank_game)
-      puts "Победил #{@user.name}!"
+      puts ''
+      puts "Победил #{@dealer.name}!"
     else
       @user.get_win(@bank_game / 2)
       @dealer.get_win(@bank_game / 2)
+      puts ''
       puts 'Ничья'
     end
   end
