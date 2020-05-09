@@ -1,4 +1,5 @@
-%w[user card_deck].each { |f| require_relative f }
+require_relative 'user'
+require_relative 'card'
 
 class Game
 
@@ -29,7 +30,7 @@ class Game
 
   def new_game
     @card_index = 0
-    @card_deck = CardDeck.new
+    @card_deck = Card.new
     @card_deck_shuffled = @card_deck.shuffled_card
 
     @bank_game = 0
