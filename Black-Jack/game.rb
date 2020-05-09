@@ -47,6 +47,13 @@ class Game
     @dealer.put_bank(REGULAR_BANK)
   end
 
+  def add_card(user)
+    card = @card_deck_shuffled[@card_index]
+    user.cards << card
+    user.score += @card_deck.card_value(card)
+    @card_index += 1
+  end
+
   def user_make_game
     puts ''
     puts "Карты: #{@user.cards}"
@@ -63,13 +70,6 @@ class Game
 
   def dealer_make_game
     add_card(@dealer) if @dealer.score < 17
-  end
-
-  def add_card(user)
-    card = @card_deck_shuffled[@card_index]
-    user.cards << card
-    user.score += @card_deck.card_value(card)
-    @card_index += 1
   end
 
   def result_game
