@@ -1,99 +1,35 @@
 require_relative 'user'
-require_relative 'card'
+require_relative 'deck'
 
 class Game
+
+  attr_reader :user, :dealer, :deck, :bank_game
 
   REGULAR_BANK = 10
 
   def initialize(name)
     @user = User.new(name)
     @dealer = User.new('Dealer')
-    @card_index = 0
-    @bank_game = 0
-  end
-
-  def start_game
-    loop do
-      @stop = false
-      new_game
-      user_make_game
-      dealer_make_game unless @stop
-      result_game
-      open_cards
-      puts ''
-      puts 'Введите: 1 - продолжить, 2 - выход'
-      entered_number = gets.chomp.to_i
-      next if entered_number == 1
-      break if entered_number == 2
-    end
   end
 
   def new_game
-    @card_index = 0
-    @card_deck = Card.new
-    @card_deck_shuffled = @card_deck.shuffled_card
-
     @bank_game = 0
     @bank_game += REGULAR_BANK * 2
 
+    @deck = Deck.new
+
     @user.cards = []
     @user.score = 0
-    (1..2).each { |n| add_card(@user) }
+    (1..2).each { |n| @deck.add_card(@user) }
     @user.put_bank(REGULAR_BANK)
 
     @dealer.cards = []
     @dealer.score = 0
-    (1..2).each { |n| add_card(@dealer)}
+    (1..2).each { |n| @deck.add_card(@dealer)}
     @dealer.put_bank(REGULAR_BANK)
   end
 
-  def add_card(user)
-    card = @card_deck_shuffled[@card_index]
-    user.cards << card
-    user.score += @card_deck.card_value(card)
-    @card_index += 1
-  end
-
-  def user_make_game
-    puts ''
-    puts "Карты: #{@user.cards}"
-    puts "Очки: #{@user.score}"
-    puts ''
-    puts 'Введите: 1 - пропустить ход, 2 - добавить карту, 3 - открыть карты'
-    entered_number = gets.chomp.to_i
-
-    return if entered_number == 1
-
-    add_card(@user) if entered_number == 2
-    @stop = true if entered_number == 3
-  end
-
   def dealer_make_game
-    add_card(@dealer) if @dealer.score < 17
-  end
-
-  def result_game
-    puts ''
-    puts "Ваши карты: #{@user.cards}"
-    puts "Ваши очки: #{@user.score}"
-    puts "Карты дилера: #{@dealer.cards}"
-    puts "Очки дилера: #{@dealer.score}"
-  end
-
-  def open_cards
-    if @user.score > @dealer.score && @user.score <= 21 || @dealer.score > 21 && @user.score <= 21
-      @user.get_win(@bank_game)
-      puts ''
-      puts "Победил #{@user.name}!"
-    elsif @dealer.score > @user.score && @dealer.score <= 21 || @dealer.score <= 21 && @user.score > 21
-      @dealer.get_win(@bank_game)
-      puts ''
-      puts "Победил #{@dealer.name}!"
-    else
-      @user.get_win(@bank_game / 2)
-      @dealer.get_win(@bank_game / 2)
-      puts ''
-      puts 'Ничья'
-    end
+    @deck.add_card(@dealer) if @dealer.score < 17
   end
 end

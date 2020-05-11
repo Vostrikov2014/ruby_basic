@@ -1,4 +1,4 @@
-class Card
+class Deck
   VALUES = [2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K', 'A']
   SUITS = ['+', '<3', '^', '<>']
 
@@ -14,13 +14,13 @@ class Card
         @cards["#{value}#{suit}"] = score
       end
     end
+    @card_index = 0
+    @deck_shuffled = @cards.keys.shuffle!
   end
 
-  def shuffled_card
-    @cards.keys.shuffle!
-  end
-
-  def card_value(value)
-    @cards[value]
+  def add_card(user)
+    user.cards << @deck_shuffled[@card_index]
+    user.score += @cards[@deck_shuffled[@card_index]]
+    @card_index += 1
   end
 end
