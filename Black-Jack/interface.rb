@@ -26,7 +26,9 @@ class Interface
 
   def user_make_game
     puts ''
-    puts "Карты: #{@game.user.cards}"
+    print 'Карты:'
+    @game.user.cards.each { |card| print " #{card.name}"}
+    puts ''
     puts "Очки: #{@game.user.score}"
     puts ''
     puts 'Введите: 1 - пропустить ход, 2 - добавить карту, 3 - открыть карты'
@@ -40,9 +42,13 @@ class Interface
 
   def result_game
     puts ''
-    puts "Ваши карты: #{@game.user.cards}"
+    print 'Ваши карты:'
+    @game.user.cards.each { |card| print " #{card.name}"}
+    puts ''
     puts "Ваши очки: #{@game.user.score}"
-    puts "Карты дилера: #{@game.dealer.cards}"
+    print 'Карты дилера:'
+    @game.dealer.cards.each { |card| print " #{card.name}"}
+    puts ''
     puts "Очки дилера: #{@game.dealer.score}"
   end
 
