@@ -1,17 +1,16 @@
-class Deck
-  VALUES = [2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K', 'A']
-  SUITS = ['+', '<3', '^', '<>']
+require_relative 'card'
 
+class Deck
   attr_reader :cards
 
   def initialize
     @cards = {}
-    VALUES.each do |value|
-      SUITS.each do |suit|
+    Card::VALUES.each do |value|
+      Card::SUITS.each do |suit|
         score = value if [2, 3, 4, 5, 6, 7, 8, 9, 10].include?(value)
         score = 10 if %w[J Q K].include?(value)
         score = 11 if value == 'A'
-        @cards["#{value}#{suit}"] = score
+        @cards << Card.new("#{value}#{suit}", score)
       end
     end
     @card_index = 0
