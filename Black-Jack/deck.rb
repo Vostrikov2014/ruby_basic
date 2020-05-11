@@ -5,6 +5,7 @@ class Deck
 
   def initialize
     @cards = []
+    score = 0
     Card::VALUES.each do |value|
       Card::SUITS.each do |suit|
         score = value if [2, 3, 4, 5, 6, 7, 8, 9, 10].include?(value)

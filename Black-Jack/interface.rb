@@ -1,9 +1,8 @@
-%w[game hand].each { |f| require_relative f }
+require_relative 'game'
+require_relative 'hand'
 
 class Interface
-
   def start_game
-
     print 'Введите имя игрока: '
     name = gets.chomp
     @game = Game.new(name)
@@ -27,7 +26,7 @@ class Interface
   def user_make_game
     puts ''
     print 'Карты:'
-    @game.user.cards.each { |card| print " #{card.name}"}
+    @game.user.cards.each { |card| print " #{card.name}" }
     puts ''
     puts "Очки: #{@game.user.score}"
     puts ''
@@ -43,11 +42,11 @@ class Interface
   def result_game
     puts ''
     print 'Ваши карты:'
-    @game.user.cards.each { |card| print " #{card.name}"}
+    @game.user.cards.each { |card| print " #{card.name}" }
     puts ''
     puts "Ваши очки: #{@game.user.score}"
     print 'Карты дилера:'
-    @game.dealer.cards.each { |card| print " #{card.name}"}
+    @game.dealer.cards.each { |card| print " #{card.name}" }
     puts ''
     puts "Очки дилера: #{@game.dealer.score}"
   end

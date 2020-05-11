@@ -1,5 +1,4 @@
 class Hand
-
   def initialize(game)
     @game = game
   end

@@ -2,7 +2,6 @@ require_relative 'user'
 require_relative 'deck'
 
 class Game
-
   attr_reader :user, :dealer, :deck, :bank_game
 
   REGULAR_BANK = 10
@@ -20,12 +19,12 @@ class Game
 
     @user.cards = []
     @user.score = 0
-    (1..2).each { |n| @deck.add_card(@user) }
+    2.times { @deck.add_card(@user) }
     @user.put_bank(REGULAR_BANK)
 
     @dealer.cards = []
     @dealer.score = 0
-    (1..2).each { |n| @deck.add_card(@dealer)}
+    2.times { @deck.add_card(@dealer) }
     @dealer.put_bank(REGULAR_BANK)
   end
 
